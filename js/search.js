@@ -14,6 +14,11 @@ const Context = {
     Unknown: Symbol(null)
 }
 
+function isOwnProfile() {
+    const allEdits = document.querySelectorAll("a[href*=edit]");
+    return allEdits.length > 0;
+}
+
 function getContext(url) {
     if (url.hostname == "www.linkedin.com" && url.pathname.match(/\/in\/[^\/]+\/details\/projects\//)) {
         return Context.LinkedInProfileProjects;
@@ -54,11 +59,19 @@ function toListOfSkills(el) {
         return el
 }
 
-async function getLinkedInProfileMainContent() {
+async function waitForPageLoad(context) {
+    if (context == Context.LinkedInProfileMain) {
+        await waitForElement("#experience + div + div.pvs-list__outer-container .pvs-entity div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)");
+    } else if (context == Context.LinkedInProfileProjects) {
+        await waitForElement(".pvs-list__container ul.pvs-list div.pvs-entity > div:nth-child(1) > div:nth-child(1)");
+    }
+}
+
+function getLinkedInProfileMainContent() {
     const summary = document.querySelector("#about + div + div span").innerText;
     const [_ignored, main_skills] = document.querySelectorAll("#about + div + div + div span[aria-hidden=true]");
     const allExperiences = document.querySelectorAll("#experience + div + div.pvs-list__outer-container .pvs-entity");
-    await waitForElement("#experience + div + div.pvs-list__outer-container .pvs-entity div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div:nth-child(1)")
+
     const experiences = Array.from(allExperiences).map(el => {
         const [title, company_status, time_span, location, desc, skills] = getLinkedInCardContent(el);
         const [company, status] = splitString(company_status.innerText);
@@ -108,8 +121,7 @@ async function getLinkedInProfileMainContent() {
     }
 }
 
-async function getLinkedInProfileProjectContent() {
-    await waitForElement(".pvs-list__container ul.pvs-list div.pvs-entity > div:nth-child(1) > div:nth-child(1)");
+function getLinkedInProfileProjectContent() {
     const allProjects = document.querySelectorAll(".pvs-entity");
     info("projects", Array.from(allProjects).map(el => {
         const project = el.querySelector(":scope > div > div > div div div div :not(ul) span[aria-hidden=true]");
@@ -127,9 +139,11 @@ async function getLinkedInProfileProjectContent() {
     const url = new URL(document.URL);
     const context = getContext(url);
 
-    if (context == Context.LinkedInProfileMain) {
-        info("profile", await getLinkedInProfileMainContent());
-    } else if (context == Context.LinkedInProfileProjects) {
-        await getLinkedInProfileProjectContent();
+    await waitForPageLoad(context);
+
+    if (isOwnProfile() && context == Context.LinkedInProfileMain) {
+        info("profile", getLinkedInProfileMainContent());
+    } else if (isOwnProfile() && context == Context.LinkedInProfileProjects) {
+        getLinkedInProfileProjectContent();
     }
 })();
