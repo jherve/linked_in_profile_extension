@@ -171,8 +171,10 @@ function getLinkedInProfileProjectContent() {
   await waitForPageLoad(context);
 
   if (isOwnProfile() && context == Context.LinkedInProfileMain) {
-    info("profile", getLinkedInProfileMainContent());
+    const main = getLinkedInProfileMainContent();
+    browser.storage.local.set(main);
   } else if (isOwnProfile() && context == Context.LinkedInProfileProjects) {
-    info("projects", getLinkedInProfileProjectContent());
+    const projects = getLinkedInProfileProjectContent();
+    browser.storage.local.set({ projects });
   }
 })();
