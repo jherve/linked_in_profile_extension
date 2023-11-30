@@ -11,6 +11,7 @@ function error(...stuff) {
 const Context = {
   LinkedInProfileMain: Symbol("LinkedInProfileMain"),
   LinkedInProfileProjects: Symbol("LinkedInProfileProjects"),
+  LinkedInProfileSkills: Symbol("LinkedInProfileSkills"),
   Unknown: Symbol(null),
 };
 
@@ -25,6 +26,11 @@ function getContext(url) {
     url.pathname.match(/\/in\/[^\/]+\/details\/projects\//)
   ) {
     return Context.LinkedInProfileProjects;
+  } else if (
+    url.hostname == "www.linkedin.com" &&
+    url.pathname.match(/\/in\/[^\/]+\/details\/skills\//)
+  ) {
+    return Context.LinkedInProfileSkills;
   } else if (url.hostname == "www.linkedin.com" && url.pathname.match(/\/in\/[^\/]+\/$/)) {
     return Context.LinkedInProfileMain;
   } else {
@@ -162,6 +168,13 @@ function getLinkedInProfileProjectContent() {
   });
 }
 
+function getLinkedInProfileSkillsContent() {
+  const allSkills = document.querySelectorAll(
+    "div:not([hidden]) > div > div > div > ul.pvs-list a[href*='search/results/all'] span[aria-hidden=true]"
+  );
+  return Array.from(allSkills, (el) => el.innerText);
+}
+
 (async () => {
   // Kinda hackish workaround to access modules shared between
   // background and content : https://stackoverflow.com/a/53033388
@@ -176,5 +189,8 @@ function getLinkedInProfileProjectContent() {
   } else if (isOwnProfile() && context == Context.LinkedInProfileProjects) {
     const projects = getLinkedInProfileProjectContent();
     browser.storage.local.set({ projects });
+  } else if (isOwnProfile() && context == Context.LinkedInProfileSkills) {
+    const skills = getLinkedInProfileSkillsContent();
+    browser.storage.local.set({ skills });
   }
 })();
