@@ -144,15 +144,21 @@ function getLinkedInProfileProjectContent() {
     const project = el.querySelector(
       ":scope > div > div > div div div div :not(ul) span[aria-hidden=true]"
     );
-    const time_spans = el.querySelector(":scope span > span[aria-hidden=true]");
-    const entities = el.querySelector(
+    const time_span = el.querySelector(":scope span > span[aria-hidden=true]");
+    const entity = el.querySelector(
       ":scope > div > div > ul > li > div > div span[aria-hidden=true]"
     );
-    const desc_skills = el.querySelectorAll(
+    const [desc, skills] = el.querySelectorAll(
       ":scope ul > li ul > li > div div div span[aria-hidden=true]"
     );
 
-    return { project, time_spans, entities, desc_skills };
+    return {
+      project: project.innerText,
+      time_span: time_span.innerText,
+      entity: entity ? entity.innerText : null,
+      desc: desc.innerText,
+      skills: toListOfSkills(skills),
+    };
   });
 }
 
