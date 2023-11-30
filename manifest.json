@@ -33,9 +33,6 @@
       "id": "linked_in_profile@herve.info"
     }
   },
-  "options_ui": {
-    "page": "settings/index.html"
-  },
   "permissions": [
     "activeTab",
     "storage",
