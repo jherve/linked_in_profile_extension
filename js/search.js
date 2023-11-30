@@ -16,6 +16,7 @@ const Context = {
 };
 
 function isOwnProfile() {
+  // This is our profile if there are some edit buttons
   const allEdits = document.querySelectorAll("a[href*=edit]");
   return allEdits.length > 0;
 }
@@ -176,8 +177,6 @@ function getLinkedInProfileSkillsContent() {
 }
 
 (async () => {
-  // Kinda hackish workaround to access modules shared between
-  // background and content : https://stackoverflow.com/a/53033388
   const url = new URL(document.URL);
   const context = getContext(url);
 
