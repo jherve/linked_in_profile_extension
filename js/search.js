@@ -84,7 +84,9 @@ async function waitForPageLoad(context) {
 }
 
 function getLinkedInProfileMainContent() {
-  const summary = document.querySelector("#about + div + div span").innerText;
+  const name = document.querySelector("h1");
+  const title = document.querySelector(".pv-text-details__title ~ div");
+  const summary = document.querySelector("#about + div + div span");
   const [_ignored, main_skills] = document.querySelectorAll(
     "#about + div + div + div span[aria-hidden=true]"
   );
@@ -93,7 +95,7 @@ function getLinkedInProfileMainContent() {
   );
 
   const experiences = Array.from(allExperiences).map((el) => {
-    const [title, company_status, time_span, location, desc, skills] = getLinkedInCardContent(el);
+    const [title, company_status, time_span, location, description, skills] = getLinkedInCardContent(el);
     const [company, status] = splitString(company_status.innerText);
     const [span, duration] = splitString(time_span.innerText);
 
@@ -104,7 +106,7 @@ function getLinkedInProfileMainContent() {
       span: span,
       duration: duration,
       location: location.innerText,
-      desc: desc.innerText,
+      description: description.innerText,
       skills: toListOfSkills(skills),
     };
   });
@@ -112,12 +114,12 @@ function getLinkedInProfileMainContent() {
     "#education + div + div.pvs-list__outer-container .pvs-entity"
   );
   const educations = Array.from(allEducations).map((el) => {
-    const [entity, diploma, time_span, desc, skills] = getLinkedInCardContent(el);
+    const [entity, diploma, time_span, description, skills] = getLinkedInCardContent(el);
     return {
       entity: entity.innerText,
       diploma: diploma.innerText,
       time_span: time_span.innerText,
-      desc: desc.innerText,
+      description: description.innerText,
       skills: toListOfSkills(skills),
     };
   });
@@ -125,45 +127,49 @@ function getLinkedInProfileMainContent() {
     "#volunteering_experience + div + div.pvs-list__outer-container .pvs-entity"
   );
   const volunteerings = Array.from(allVolunteering).map((el) => {
-    const [role, entity, time_span, desc] = getLinkedInCardContent(el);
+    const [role, entity, time_span, description] = getLinkedInCardContent(el);
     const [span, duration] = splitString(time_span.innerText);
     return {
       role: role.innerText,
       entity: entity.innerText,
       span: span,
       duration: duration,
-      desc: desc.innerText,
+      description: description.innerText,
     };
   });
 
   return {
-    summary,
-    main_skills: toListOfSkills(main_skills),
-    experiences,
-    educations,
-    volunteerings,
+    basics: {
+      summary: summary.innerText,
+      name: name.innerText,
+      title: title.innerText,
+      main_skills: toListOfSkills(main_skills),
+    },
+    work: experiences,
+    education: educations,
+    volunteer: volunteerings,
   };
 }
 
 function getLinkedInProfileProjectContent() {
   const allProjects = document.querySelectorAll(".pvs-entity");
   return Array.from(allProjects).map((el) => {
-    const project = el.querySelector(
+    const name = el.querySelector(
       ":scope > div > div > div div div div :not(ul) span[aria-hidden=true]"
     );
     const time_span = el.querySelector(":scope span > span[aria-hidden=true]");
-    const entity = el.querySelector(
+    const institution = el.querySelector(
       ":scope > div > div > ul > li > div > div span[aria-hidden=true]"
     );
-    const [desc, skills] = el.querySelectorAll(
+    const [description, skills] = el.querySelectorAll(
       ":scope ul > li ul > li > div div div span[aria-hidden=true]"
     );
 
     return {
-      project: project.innerText,
+      name: name.innerText,
       time_span: time_span.innerText,
-      entity: entity ? entity.innerText : null,
-      desc: desc.innerText,
+      institution: institution ? institution.innerText : null,
+      description: description.innerText,
       skills: toListOfSkills(skills),
     };
   });
