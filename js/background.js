@@ -9,7 +9,17 @@ function downloadAsJson(content, fileName) {
 browser.browserAction.onClicked.addListener(async (tab) => {
   try {
     const profile = await browser.storage.local.get();
-    downloadAsJson(profile, "profile.json");
+    downloadAsJson(
+      {
+        basics: profile.basics,
+        work: profile.work,
+        volunteer: profile.volunteer,
+        education: profile.education,
+        skills: profile.skills,
+        projects: profile.projects,
+      },
+      "profile.json"
+    );
   } catch (error) {
     error(error);
   }

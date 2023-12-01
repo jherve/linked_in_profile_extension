@@ -95,18 +95,19 @@ function getLinkedInProfileMainContent() {
   );
 
   const experiences = Array.from(allExperiences).map((el) => {
-    const [title, company_status, time_span, location, description, skills] = getLinkedInCardContent(el);
+    const [position, company_status, time_span, location, summary, skills] =
+      getLinkedInCardContent(el);
     const [company, status] = splitString(company_status.innerText);
     const [span, duration] = splitString(time_span.innerText);
 
     return {
-      title: title.innerText,
-      company: company,
+      name: company,
+      position: position.innerText,
+      location: location.innerText,
       status: status,
       span: span,
       duration: duration,
-      location: location.innerText,
-      description: description.innerText,
+      summary: summary.innerText,
       skills: toListOfSkills(skills),
     };
   });
@@ -114,12 +115,12 @@ function getLinkedInProfileMainContent() {
     "#education + div + div.pvs-list__outer-container .pvs-entity"
   );
   const educations = Array.from(allEducations).map((el) => {
-    const [entity, diploma, time_span, description, skills] = getLinkedInCardContent(el);
+    const [institution, area, time_span, summary, skills] = getLinkedInCardContent(el);
     return {
-      entity: entity.innerText,
-      diploma: diploma.innerText,
+      institution: institution.innerText,
+      area: area.innerText,
       time_span: time_span.innerText,
-      description: description.innerText,
+      summary: summary.innerText,
       skills: toListOfSkills(skills),
     };
   });
@@ -127,22 +128,22 @@ function getLinkedInProfileMainContent() {
     "#volunteering_experience + div + div.pvs-list__outer-container .pvs-entity"
   );
   const volunteerings = Array.from(allVolunteering).map((el) => {
-    const [role, entity, time_span, description] = getLinkedInCardContent(el);
+    const [position, entity, time_span, description] = getLinkedInCardContent(el);
     const [span, duration] = splitString(time_span.innerText);
     return {
-      role: role.innerText,
-      entity: entity.innerText,
+      organization: entity.innerText,
+      role: position.innerText,
       span: span,
       duration: duration,
-      description: description.innerText,
+      summary: description.innerText,
     };
   });
 
   return {
     basics: {
-      summary: summary.innerText,
       name: name.innerText,
-      title: title.innerText,
+      label: title.innerText,
+      summary: summary.innerText,
       main_skills: toListOfSkills(main_skills),
     },
     work: experiences,
@@ -158,7 +159,7 @@ function getLinkedInProfileProjectContent() {
       ":scope > div > div > div div div div :not(ul) span[aria-hidden=true]"
     );
     const time_span = el.querySelector(":scope span > span[aria-hidden=true]");
-    const institution = el.querySelector(
+    const entity = el.querySelector(
       ":scope > div > div > ul > li > div > div span[aria-hidden=true]"
     );
     const [description, skills] = el.querySelectorAll(
@@ -168,7 +169,7 @@ function getLinkedInProfileProjectContent() {
     return {
       name: name.innerText,
       time_span: time_span.innerText,
-      institution: institution ? institution.innerText : null,
+      entity: entity ? entity.innerText : null,
       description: description.innerText,
       skills: toListOfSkills(skills),
     };
