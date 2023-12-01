@@ -47,10 +47,12 @@ async function waitForElement(selector) {
   let el;
   let loops = 0;
   while (el == undefined && loops < 10) {
+    debug("waiting for", selector);
     el = document.querySelector(selector);
     loops++;
     await sleep(200);
   }
+  debug("found", selector, el);
   return el;
 }
 
