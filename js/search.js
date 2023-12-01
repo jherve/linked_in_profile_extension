@@ -82,6 +82,27 @@ async function waitForPageLoad(context) {
     await waitForElement(
       ".pvs-list__container ul.pvs-list div.pvs-entity > div:nth-child(1) > div:nth-child(1)"
     );
+  } else if (context == Context.LinkedInProfileSkills) {
+    const mainListSelector = "main > section > div > div.active > div > div > div > ul";
+    const initialScrollY = window.scrollY;
+
+    await waitForElement(mainListSelector);
+    const mainList = document.querySelector(mainListSelector);
+
+    let countBeforeScroll, countAfterScroll;
+    do {
+      // Wait for the last item in the list to be loaded
+      await waitForElement("div.active ul > li:last-child");
+      countBeforeScroll = mainList.childElementCount;
+      window.scrollTo(0, window.scrollMaxY);
+
+      // Wait for a (n+1)th child to be added to the list. This will eventually timeout
+      // if no such element is added to the tree.
+      await waitForElement(`div.active ul > li:nth-child(${countBeforeScroll + 1})`);
+      countAfterScroll = mainList.childElementCount;
+    } while (countBeforeScroll != countAfterScroll);
+
+    window.scrollTo(0, initialScrollY);
   }
 }
 
