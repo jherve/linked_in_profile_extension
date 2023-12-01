@@ -46,7 +46,7 @@ function sleep(delay) {
 async function waitForElement(selector) {
   let el;
   let loops = 0;
-  while (el == undefined || loops < 10) {
+  while (el == undefined && loops < 10) {
     el = document.querySelector(selector);
     loops++;
     await sleep(200);
