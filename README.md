@@ -15,3 +15,7 @@ This Firefox extension enables you to download your profile as a plain JSON file
 1. Visit the detail pages related to your projects (/in/\<your-username\>/details/projects), your skills (/in/\<your-username\>/details/skills), ...
 1. Click the extension's button, and download the JSON file
 1. Profit !
+
+## Conversion to YML file
+
+The JSON file can easily be converted to YAML using `yq` with e.g. `cat profile.json | yq -P -oy`
