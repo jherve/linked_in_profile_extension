@@ -108,7 +108,7 @@ async function waitForPageLoad(context) {
 
 function getLinkedInProfileMainContent() {
   const name = document.querySelector("h1");
-  const title = document.querySelector(".pv-text-details__title ~ div");
+  const title = document.querySelector(".text-body-medium");
   const summary = document.querySelector("#about + div + div span");
   const [_ignored, main_skills] = document.querySelectorAll(
     "#about + div + div + div span[aria-hidden=true]"
