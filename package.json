@@ -1,0 +1,19 @@
+{
+  "name": "linked_in_profile",
+  "version": "1.0.0",
+  "description": "A Firefox extension that enables downloading your profile as a plain JSON file.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel watch manifest.json --config @parcel/config-webextension --dist-dir extension/",
+    "build": "parcel build manifest.json --config @parcel/config-webextension --dist-dir extension/",
+    "start:firefox": "web-ext run --source-dir ./extension"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@parcel/config-webextension": "^2.11.0",
+    "parcel": "^2.11.0",
+    "web-ext": "^7.11.0"
+  }
+}

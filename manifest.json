@@ -22,11 +22,9 @@
   },
   "background": {
     "scripts": [
-      "js/messages.js",
       "js/background.js"
     ],
-    "persistent": false,
-    "type": "module"
+    "persistent": false
   },
   "browser_specific_settings": {
     "gecko": {
