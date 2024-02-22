@@ -5,9 +5,7 @@
   "description": "Download your linked in profile as JSON",
   "content_scripts": [
     {
-      "matches": [
-        "*://www.linkedin.com/in/*"
-      ],
+      "matches": ["*://www.linkedin.com/*"],
       "js": [
         "js/search.js"
       ]
