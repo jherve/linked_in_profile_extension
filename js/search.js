@@ -114,7 +114,7 @@ function getLinkedInProfileMainContent() {
     "#about + div + div + div span[aria-hidden=true]"
   );
   const allExperiences = document.querySelectorAll(
-    "#experience + div + div.pvs-list__outer-container .pvs-entity"
+    "#experience + div + div.pvs-list__outer-container div[data-view-name]"
   );
 
   const experiences = Array.from(allExperiences).map((el) => {
@@ -135,7 +135,7 @@ function getLinkedInProfileMainContent() {
     };
   });
   const allEducations = document.querySelectorAll(
-    "#education + div + div.pvs-list__outer-container .pvs-entity"
+    "#education + div + div.pvs-list__outer-container div[data-view-name]"
   );
   const educations = Array.from(allEducations).map((el) => {
     const [institution, area, time_span, summary, skills] = getLinkedInCardContent(el);
@@ -148,7 +148,7 @@ function getLinkedInProfileMainContent() {
     };
   });
   const allVolunteering = document.querySelectorAll(
-    "#volunteering_experience + div + div.pvs-list__outer-container .pvs-entity"
+    "#volunteering_experience + div + div.pvs-list__outer-container div[data-view-name]"
   );
   const volunteerings = Array.from(allVolunteering).map((el) => {
     const [position, entity, time_span, description] = getLinkedInCardContent(el);
