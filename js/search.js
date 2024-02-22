@@ -176,7 +176,7 @@ function getLinkedInProfileMainContent() {
 }
 
 function getLinkedInProfileProjectContent() {
-  const allProjects = document.querySelectorAll(".pvs-entity");
+  const allProjects = document.querySelectorAll("ul.pvs-list > li > div > div[data-view-name]");
   return Array.from(allProjects).map((el) => {
     const name = el.querySelector(
       ":scope > div > div > div div div div :not(ul) span[aria-hidden=true]"
