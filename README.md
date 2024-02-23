@@ -7,7 +7,8 @@ This Firefox extension enables you to download your profile as a plain JSON file
 ## Installation
 
 1. Clone the repository
-1. Install the extension as [temporary](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#installing) by pointing to the `manifest.json` file within this repo.
+1. Run build : `npm install && npm run build`
+1. Install the extension as [temporary](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Your_first_WebExtension#installing) by pointing to `extension/manifest.json` (and NOT the manifest.json from root directory).
 
 ## Usage
 
