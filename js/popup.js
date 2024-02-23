@@ -22,6 +22,8 @@ document.querySelector("form#download").addEventListener("submit", async (e) => 
   browser.runtime.sendMessage({ download_profile: profile });
 });
 
+browser.storage.local.onChanged.addListener(() => refreshDisplayedProfile());
+
 (async () => {
   await refreshDisplayedProfile();
 })();
