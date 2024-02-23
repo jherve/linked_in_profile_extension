@@ -10,6 +10,7 @@ function error(...stuff) {
 
 const Context = {
   LinkedInProfileMain: Symbol("LinkedInProfileMain"),
+  LinkedInProfileExperience: Symbol("LinkedInProfileExperience"),
   LinkedInProfileProjects: Symbol("LinkedInProfileProjects"),
   LinkedInProfileSkills: Symbol("LinkedInProfileSkills"),
   Unknown: Symbol(null),
@@ -32,6 +33,11 @@ function getContext(url) {
     url.pathname.match(/\/in\/[^\/]+\/details\/skills\//)
   ) {
     return Context.LinkedInProfileSkills;
+  } else if (
+    url.hostname == "www.linkedin.com" &&
+    url.pathname.match(/\/in\/[^\/]+\/details\/experience\//)
+  ) {
+    return Context.LinkedInProfileExperience;
   } else if (url.hostname == "www.linkedin.com" && url.pathname.match(/\/in\/[^\/]+\/$/)) {
     return Context.LinkedInProfileMain;
   } else {
@@ -113,27 +119,7 @@ function getLinkedInProfileMainContent() {
   const [_ignored, main_skills] = document.querySelectorAll(
     "#about + div + div + div span[aria-hidden=true]"
   );
-  const allExperiences = document.querySelectorAll(
-    "#experience + div + div.pvs-list__outer-container div[data-view-name]"
-  );
 
-  const experiences = Array.from(allExperiences).map((el) => {
-    const [position, company_status, time_span, location, summary, skills] =
-      getLinkedInCardContent(el);
-    const [company, status] = splitString(company_status.innerText);
-    const [span, duration] = splitString(time_span.innerText);
-
-    return {
-      name: company,
-      position: position.innerText,
-      location: location.innerText,
-      status: status,
-      span: span,
-      duration: duration,
-      summary: summary.innerText,
-      skills: toListOfSkills(skills),
-    };
-  });
   const allEducations = document.querySelectorAll(
     "#education + div + div.pvs-list__outer-container div[data-view-name]"
   );
@@ -169,7 +155,6 @@ function getLinkedInProfileMainContent() {
       summary: summary.innerText,
       main_skills: toListOfSkills(main_skills),
     },
-    work: experiences,
     education: educations,
     volunteer: volunteerings,
   };
@@ -199,6 +184,36 @@ function getLinkedInProfileProjectContent() {
   });
 }
 
+function getLinkedInProfileExperienceContent() {
+  const allXps = document.querySelectorAll("ul.pvs-list > li > div > div[data-view-name]");
+  return Array.from(allXps).map((el) => {
+    const position = el.querySelector(
+      ":scope > div > div > div div div div :not(ul) span[aria-hidden=true]"
+    );
+    const [companyAndContractType, timeSpanAndDuration, location] = el.querySelectorAll(
+      ":scope span > span[aria-hidden=true]"
+    );
+    const [summary, skills] = el.querySelectorAll(
+      ":scope ul > li ul > li > div div div span[aria-hidden=true]"
+    );
+
+    const company = splitString(companyAndContractType.innerText)[0];
+    const contractType = splitString(companyAndContractType.innerText)[1];
+    const [span, duration] = splitString(timeSpanAndDuration.innerText);
+
+    return {
+      name: company,
+      position: position.innerText,
+      location: location.innerText,
+      status: contractType,
+      span,
+      duration,
+      summary: summary.innerText,
+      skills: toListOfSkills(skills),
+    };
+  });
+}
+
 function getLinkedInProfileSkillsContent() {
   const allSkills = document.querySelectorAll(
     "div:not([hidden]) > div > div > div > ul.pvs-list a[href*='search/results/all'] span[aria-hidden=true]"
@@ -221,5 +236,8 @@ function getLinkedInProfileSkillsContent() {
   } else if (isOwnProfile() && context == Context.LinkedInProfileSkills) {
     const skills = getLinkedInProfileSkillsContent();
     browser.storage.local.set({ skills });
+  } else if (isOwnProfile() && context == Context.LinkedInProfileExperience) {
+    const work = getLinkedInProfileExperienceContent();
+    browser.storage.local.set({ work });
   }
 })();
