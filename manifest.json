@@ -16,7 +16,8 @@
   },
   "browser_action": {
     "default_icon": "icons/resume.svg",
-    "default_title": "LinkedIn Profile"
+    "default_title": "LinkedIn Profile",
+    "default_popup": "js/popup.html"
   },
   "background": {
     "scripts": [

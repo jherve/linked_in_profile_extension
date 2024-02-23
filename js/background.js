@@ -5,22 +5,14 @@ function downloadAsJson(content, fileName) {
   browser.downloads.download({ url: profileUrl, filename: fileName, saveAs: true });
 }
 
-// The main event loop
-browser.browserAction.onClicked.addListener(async (tab) => {
-  try {
-    const profile = await browser.storage.local.get();
-    downloadAsJson(
-      {
-        basics: profile.basics,
-        work: profile.work,
-        volunteer: profile.volunteer,
-        education: profile.education,
-        skills: profile.skills,
-        projects: profile.projects,
-      },
-      "profile.json"
-    );
-  } catch (error) {
-    error(error);
+browser.runtime.onMessage.addListener(async (msg) => {
+  if (msg.download_profile) {
+    try {
+      downloadAsJson(msg.download_profile, "profile.json");
+    } catch (error) {
+      console.error(error);
+    }
+  } else {
+    console.error("[bg] received unhandled message", msg);
   }
 });
