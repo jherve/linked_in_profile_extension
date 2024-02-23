@@ -25,6 +25,9 @@
     ],
     "persistent": false
   },
+  "options_ui": {
+    "page": "js/settings.html"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "linked_in_profile@herve.info"
